@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {Pressable} from 'react-native';
+import {Platform, Pressable} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
@@ -9,10 +9,24 @@ import {useLazyLoadQuery, graphql} from '@animavita/relay';
 import {useTheme, px2ddp, StyledTheme} from '@animavita/theme';
 import Menu, {MenuItem, MenuDivider} from 'react-native-material-menu';
 import {useI18n} from '@animavita/i18n';
+import {URL} from 'react-native-url-polyfill';
 
 import Home from '../modules/home/Home';
 
 import {HomeQuery} from './__generated__/HomeQuery.graphql';
+
+const getPictureUrl = (url: string) => {
+  if (Platform.OS === 'android') {
+    const urlObject = new URL(url);
+    const hostname = urlObject.hostname.split('.')[0];
+    const port = urlObject.port;
+    const pathname = urlObject.pathname;
+
+    return `http://10.0.2.2:${port}/${hostname}${pathname}`;
+  }
+
+  return url;
+};
 
 interface MenuRef {
   hide: () => void;
@@ -51,7 +65,7 @@ const HomeNavigator: React.FC = () => {
 
   const name = me?.name?.split(' ')[0] || '';
   const imageIndex = me ? me.profileImages.length - 1 : 0;
-  const uri = me?.profileImages[imageIndex].url;
+  const uri = getPictureUrl(me?.profileImages[imageIndex].url || '');
 
   const backgroundColor = theme.themeName === 'light' ? StyledTheme.white : StyledTheme.black;
 
