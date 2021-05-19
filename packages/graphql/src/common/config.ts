@@ -28,12 +28,12 @@ export const AWS_REGION = envVar
   .asString();
 export const AWS_ACCESS_KEY_ID = envVar
   .get('AWS_ACCESS_KEY_ID')
-  .default('foo')
+  .default('test')
   .required(isProduction)
   .asString();
 export const AWS_SECRET_ACCESS_KEY = envVar
   .get('AWS_SECRET_ACCESS_KEY')
-  .default('bar')
+  .default('test')
   .required(isProduction)
   .asString();
 export const AWS_STANDARD_QUEUE_URL = envVar
